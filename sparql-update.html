@@ -40,7 +40,7 @@
 		</style>
 		
 		<iron-ajax
-		id="ajax-update"
+		id="ajaxupdate"
 		url="http://rdf-smag0.rhcloud.com/ds/update"
 		body="{{options}}"
 		method="POST"
@@ -154,7 +154,7 @@
 				console.log(this.propriete);
 				
 				console.log(this.objet);
-				
+				console.log(this.$.ajaxupdate.generateRequest());
 				
 				
 			},
