@@ -16,11 +16,9 @@
 		<script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
 		<link rel="import" href="../sparql-update.html">
 		<link rel="import" href="../../paper-input/paper-input.html">
-		<link rel="import" href="../../paper-button/paper-button.html">
 	</head>
 	<body unresolved>
-		
-   		<template is="dom-bind" id="formUpdate">
+   		<template is="dom-bind">
 			
 			<paper-input
 			type="text" 
@@ -40,13 +38,12 @@
 			label="Objet"
 			value="{{objet::change}}"></paper-input>
 			
-
-			
-			<sparql-update sujet="{{sujet}}"  propriete="{{propriete}}" objet="{{objet}}" >
-				
+			<sparql-update 
+				sujet="{{sujet}}"
+				propriete="{{propriete}}" 
+				objet="{{objet}}">
 			</sparql-update>
+			
 		</template>
-		
-		
 	</body>
 </html>

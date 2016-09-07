@@ -9,22 +9,47 @@
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-
 <link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../paper-button/paper-button.html">
 
 <!--
 	An element providing a solution to update sparql endpoint like Fuseki.
 	(https://github.com/scenaristeur/sparql-update)
 	
 	Example:
+
+					<paper-input
+					type="text" 
+					style="width:20em"
+					label="Sujet"
+					value="{{sujet::change}}"></paper-input> 
+					
+					<paper-input 
+					type="text"
+					style="width:20em" 
+					label="propriete"
+					value="{{propriete::change}}"></paper-input>
+					
+					<paper-input 
+					type="text"
+					style="width:20em" 
+					label="Objet"
+					value="{{objet::change}}"></paper-input>
+									
+					<sparql-update
+						sujet="{{sujet}}"
+						propriete="{{propriete}}"
+						objet="{{objet}}">
+					</sparql-update>
+				
+
+	see results at the bottom of :
+		http://rdf-smag0.rhcloud.com/ds/query?query=select+*+where+%7B%3Fs+%3Fp+%3Fo%7D&output=xml&stylesheet=%2Fxml-to-html.xsl
 	
-    <sparql-update></sparql-update>
-	
-	Example:
-	
-    <sparql-update>
-	<h2>Hello sparql-update</h2>
-    </sparql-update>
+	or use sparql-statements element :
+		https://github.com/scenaristeur/sparql-statements
 	
 	@demo demo/index.html
 	@hero hero.svg
@@ -34,184 +59,126 @@
 	<template>
 		<style>
 			:host {
-			display: block;
-			box-sizing: border-box;
+				display: block;
+				box-sizing: border-box;
 			}
 		</style>
 		
 		<iron-ajax
-		id="ajaxupdate"
-		url="http://rdf-smag0.rhcloud.com/ds/update"
-		body="{{options}}"
-		method="POST"
-		handle-as="document"
-		content-type="application/x-www-form-urlencoded"
-		on-response="handleResponse"></iron-ajax>
+			id="ajaxupdate"
+			url="http://rdf-smag0.rhcloud.com/ds/update"
+			body="{{options}}"
+			method="POST"
+			handle-as="document"
+			content-type="application/x-www-form-urlencoded"
+			on-response="handleResponse">
+		</iron-ajax>
+		
 		<paper-button 
-		raised
-		on-tap="sendUpdate">
-			<iron-icon icon="check"></iron-icon>Envoyer
+			raised
+			on-tap="sendUpdate">
+			<iron-icon icon="queue"></iron-icon> <!-- ne s'affiche pas ? -->
+			Envoyer
 		</paper-button>
-		<template is="dom-bind" result="{{result}}">
-			
-			Result : {{result}}
+		
+		<template is="dom-bind" result="{{result}}" requete="{{requete}}">
+			<div>Result : {{result}}</div>
+			<div>Requete : {{requete}}</div>
 		</template>
-		<!--handle-as="json"
-		last-response="{{response}}"-->
+	
 	</template>
 	
 	<script>
-		var update  =  "PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "; 
-		update +=  "PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>"; 
-		update += "PREFIX smag:   <http://smag0.blogspot.fr/NS#>"; 
-		update += "PREFIX zoo:   <http://example.org/zoo#>";
-		update += "PREFIX owl: <http://www.w3.org/2002/07/owl#>";
-		update += "PREFIX ex: <http://example.org#>";
-		update+= "INSERT DATA {";
-		update += "GRAPH <http://smag0.blogspot.fr/SparqlUpdate>{";
-		//update += "smag:RobokIze    rdf:type         smag:Site ."; 
-		//update +="smag:RobokIze   smag:objectif         'un site de vente revente piece detachees , pour robots, et objets connectes' ." ; 
-		//     update += "ex:cat     rdfs:subClassOf  ex:animal .";
-		//     update += "zoo:host   rdfs:range       ex:animal ."; 
-		//     update += "ex:zoo1    zoo:host         ex:cat2 ."; 
-		//     update += "ex:cat3    owl:sameAs       ex:cat2 .";
-		//    update += "ex:cat3    owl:sameAs       ex:cat2 .";
-		
-		/*var sujet=document.getElementById("sujet").value;
-			var propriete=document.getElementById("propriete").value;
-			var objet=document.getElementById("objet").value;
-		*/
-		var sujet1="Sparql-statements";
-		var propriete1="type";
-		var objet1="Interface";
-		update += "smag:"+sujet1+"    smag:"+propriete1+"         smag:"+objet1+" ."; 
-		
-		// fin requete avec graphe 
-		var finRequete = "} }";
-		//var finRequete = "}"; // fin requete sans graphe
-		
-		update+=finRequete;
-		console.log(update);
 		Polymer({
 			is: 'sparql-update',
 			
 			properties: {
-				/*sujet: {
-					type: String,
-					value: 'David',
-					notify: true
-					},
+				/**
+				* Le sujet du triplet RDF
 				*/
-				/*		ds : {
-					value: 'ds',
-					notify: true
-				},*/
-				/*sujet : {
-					value: 'json',
-					notify: true
-					},
-					propriete: {
-					
-					value: 'type',
-					notify: true					
-					},
-					objet:{
-					value: 'Personne',
-					notify: true					
-				},*/
 				sujet : {
 					value: 'David',
 					notify: true
 				},
+				
+				/**
+				* La propriete du triplet RDF 
+				*/
 				propriete : {
 					value: 'type',
 					notify: true
 				},
+				
+				/**
+				* L'objet du triplet RDF 
+				*/				
 				objet : {
+
 					value: 'Personne',
 					notify: true
 				},
+				
+				/** 
+				* Les paramètres de la requete update
+				*/
 				options: {
-					
-					//OKvalue: {update: update},
-					//	notify : true
-					////OKvalue:{update: "INSERT"}
-					
-					
-					computed: 'computeUpdate(sujet)'
+					computed: 'computeUpdate(sujet,propriete,objet)'
 				},
+				
+				/** 
+				*variable pour afficher la requete, n'est pas utile
+				*/
+				requete: {
+					notify: true
+				},
+				
+				/**
+				* La réponse du serveur retournée par la requete de mise à jour
+				*/
 				result: {
 					notify: true
 				}
-				
 			},
-			computeUpdate: function(sujet){
-				var up=JSON.stringify({update: update});
+				/**
+				* Construit la requete depuis les variables sujet, propriete, objet
+				*/
+			computeUpdate: function(sujet,propriete,objet){
+				var update  =  "PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n"; 
+				update +=  "PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#> \n"; 
+				update += "PREFIX smag:   <http://smag0.blogspot.fr/NS#> \n"; 
+				update += "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n";
+				update += "INSERT DATA { \n";
+				update += "GRAPH <http://smag0.blogspot.fr/SparqlUpdate>{ \n";
+				update += "smag:"+sujet+"    smag:"+propriete+"         smag:"+objet+" . \n"; 
+				update += " } \n } \n";
+				console.log(update);
+				this.requete=update;
 				return {update: update};
 			},
+			
+			/**
+			* Execute la requete
+			*/
 			sendUpdate: function (e){
 				console.log(this.sujet);
 				console.log(this.propriete);
 				
 				console.log(this.objet);
-				console.log(this.$.ajaxupdate.generateRequest());
+				this.$.ajaxupdate.generateRequest();
 				
 				
 			},
+			
+			/**
+			* recupere et parse la reponse du serveur
+			*/
 			handleResponse: function(data){
-				
-				
 				var html=data.detail.response.getElementsByTagName("html")[0];
-				console.log(html);
 				var body=html.getElementsByTagName("body")[0];
-				console.log(body);
-				var resultat=body.getElementsByTagName("h1")[0];
-				console.log(resultat);
+				var resultat=body.getElementsByTagName("h1")[0].firstChild.nodeValue;
 				this.result=resultat;
 				console.log(this.result);
-				/*	for (i = 0; i < this.result.length; i++) {
-					// txt += x[i].childNodes[0].nodeValue + "<br>";
-					console.log(this.result[i].childNodes[0].nodeValue);
-				}*/
 			}
-			/*computedUpdate: function(){
-				var update  =  "PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "; 
-				update +=  "PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>"; 
-				update += "PREFIX smag:   <http://smag0.blogspot.fr/NS#>"; 
-				update += "PREFIX zoo:   <http://example.org/zoo#>";
-				update += "PREFIX owl: <http://www.w3.org/2002/07/owl#>";
-				update += "PREFIX ex: <http://example.org#>";
-				update+= "INSERT DATA {";
-				//update += "GRAPH <http://smag0.blogspot.fr/GraphTest>{";
-				//update += "smag:RobokIze    rdf:type         smag:Site ."; 
-				//update +="smag:RobokIze   smag:objectif         'un site de vente revente piece detachees , pour robots, et objets connectes' ." ; 
-				//     update += "ex:cat     rdfs:subClassOf  ex:animal .";
-				//     update += "zoo:host   rdfs:range       ex:animal ."; 
-				//     update += "ex:zoo1    zoo:host         ex:cat2 ."; 
-				//     update += "ex:cat3    owl:sameAs       ex:cat2 .";
-				//    update += "ex:cat3    owl:sameAs       ex:cat2 .";
-				
-				var sujet=document.getElementById("sujet").value;
-				var propriete=document.getElementById("propriete").value;
-				var objet=document.getElementById("objet").value;
-				update += "smag:"+sujet+"    smag:"+propriete+"         smag:"+objet+" ."; 
-				
-				// fin requete avec graphe var finRequete = "} }";
-				var finRequete = "}"; // fin requete sans graphe
-				
-				update+=finRequete;
-				console.log(update);
-				
-				
-				
-				
-				return {update: "INSERT"};
-				
-				
-				
-				
-				
-			}*/
 		});
 	</script>
 </dom-module>
