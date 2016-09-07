@@ -40,17 +40,21 @@
 		</style>
 		
 		<iron-ajax
-		auto
+		id="ajax-update"
 		url="http://rdf-smag0.rhcloud.com/ds/update"
 		body="{{options}}"
 		method="POST"
 		handle-as="document"
 		content-type="application/x-www-form-urlencoded"
 		on-response="handleResponse"></iron-ajax>
-		
-		<template is="dom-bind">
-		
-			1{{result}}2
+		<paper-button 
+		raised
+		on-tap="sendUpdate">
+			<iron-icon icon="check"></iron-icon>Envoyer
+		</paper-button>
+		<template is="dom-bind" result="{{result}}">
+			
+			Result : {{result}}
 		</template>
 		<!--handle-as="json"
 		last-response="{{response}}"-->
@@ -98,45 +102,62 @@
 					notify: true
 					},
 				*/
-						/*		ds : {
+				/*		ds : {
 					value: 'ds',
 					notify: true
 				},*/
 				/*sujet : {
 					value: 'json',
 					notify: true
-				},
-				propriete: {
+					},
+					propriete: {
 					
 					value: 'type',
 					notify: true					
-				},
-				objet:{
+					},
+					objet:{
 					value: 'Personne',
 					notify: true					
 				},*/
-								output : {
-					value: 'json',
+				sujet : {
+					value: 'David',
+					notify: true
+				},
+				propriete : {
+					value: 'type',
+					notify: true
+				},
+				objet : {
+					value: 'Personne',
 					notify: true
 				},
 				options: {
-
+					
 					//OKvalue: {update: update},
 					//	notify : true
 					////OKvalue:{update: "INSERT"}
 					
 					
-					computed: 'computeUpdate(output)'
+					computed: 'computeUpdate(sujet)'
 				},
 				result: {
 					notify: true
 				}
 				
 			},
-			computeUpdate: function(output){
+			computeUpdate: function(sujet){
 				var up=JSON.stringify({update: update});
 				return {update: update};
-				},
+			},
+			sendUpdate: function (e){
+				console.log(this.sujet);
+				console.log(this.propriete);
+				
+				console.log(this.objet);
+				
+				
+				
+			},
 			handleResponse: function(data){
 				
 				
@@ -148,10 +169,10 @@
 				console.log(resultat);
 				this.result=resultat;
 				console.log(this.result);
-		/*	for (i = 0; i < this.result.length; i++) {
- // txt += x[i].childNodes[0].nodeValue + "<br>";
- console.log(this.result[i].childNodes[0].nodeValue);
-  }*/
+				/*	for (i = 0; i < this.result.length; i++) {
+					// txt += x[i].childNodes[0].nodeValue + "<br>";
+					console.log(this.result[i].childNodes[0].nodeValue);
+				}*/
 			}
 			/*computedUpdate: function(){
 				var update  =  "PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "; 
