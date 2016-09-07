@@ -1,0 +1,153 @@
+<!--
+	@license
+	Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+	This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+	The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+	The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+	Code distributed by Google as part of the polymer project is also
+	subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
+<!--
+	An element providing a solution to update sparql endpoint like Fuseki.
+	(https://github.com/scenaristeur/sparql-update)
+	
+	Example:
+	
+    <sparql-update></sparql-update>
+	
+	Example:
+	
+    <sparql-update>
+	<h2>Hello sparql-update</h2>
+    </sparql-update>
+	
+	@demo demo/index.html
+	@hero hero.svg
+-->
+
+<dom-module id="sparql-update">
+	<template>
+		<style>
+			:host {
+			display: block;
+			box-sizing: border-box;
+			}
+		</style>
+		
+		<iron-ajax
+		auto
+		url="http://rdf-smag0.rhcloud.com/ds/update"
+		body="{{options}}"
+		method="POST"
+		handle-as="document"
+		content-type="application/x-www-form-urlencoded"
+		on-response="handleResponse"></iron-ajax>
+		
+		<template is="dom-bind">
+			1{{response}}2{{update}}
+		</template>
+		<!--handle-as="json"
+		last-response="{{response}}"-->
+	</template>
+	
+	<script>
+	var update  =  "PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "; 
+				update +=  "PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>"; 
+				update += "PREFIX smag:   <http://smag0.blogspot.fr/NS#>"; 
+				update += "PREFIX zoo:   <http://example.org/zoo#>";
+				update += "PREFIX owl: <http://www.w3.org/2002/07/owl#>";
+				update += "PREFIX ex: <http://example.org#>";
+				update+= "INSERT DATA {";
+				update += "GRAPH <http://smag0.blogspot.fr/SparqlUpdate>{";
+				//update += "smag:RobokIze    rdf:type         smag:Site ."; 
+				//update +="smag:RobokIze   smag:objectif         'un site de vente revente piece detachees , pour robots, et objets connectes' ." ; 
+				//     update += "ex:cat     rdfs:subClassOf  ex:animal .";
+				//     update += "zoo:host   rdfs:range       ex:animal ."; 
+				//     update += "ex:zoo1    zoo:host         ex:cat2 ."; 
+				//     update += "ex:cat3    owl:sameAs       ex:cat2 .";
+				//    update += "ex:cat3    owl:sameAs       ex:cat2 .";
+				
+				/*var sujet=document.getElementById("sujet").value;
+				var propriete=document.getElementById("propriete").value;
+				var objet=document.getElementById("objet").value;
+				*/
+				var sujet="Sparql-update";
+				var propriete="type";
+				var objet="Interface";
+				update += "smag:"+sujet+"    smag:"+propriete+"         smag:"+objet+" ."; 
+				
+				// fin requete avec graphe 
+				var finRequete = "} }";
+	//var finRequete = "}"; // fin requete sans graphe
+				
+				update+=finRequete;
+				console.log(update);
+		Polymer({
+			is: 'sparql-update',
+			
+			properties: {
+				options: {
+					type: String,
+					value:{update: update}
+					//OKvalue:{update: "INSERT"}
+					
+					
+					//computed: 'computedUpdate()'
+				},
+				result:{
+					type: String,
+					notify: true
+					}
+				
+			},
+			handleResponse: function(data){
+				
+				this.result=data.detail.response;
+				console.log(this.result);
+				}
+			 /*computedUpdate: function(){
+				var update  =  "PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "; 
+				update +=  "PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>"; 
+				update += "PREFIX smag:   <http://smag0.blogspot.fr/NS#>"; 
+				update += "PREFIX zoo:   <http://example.org/zoo#>";
+				update += "PREFIX owl: <http://www.w3.org/2002/07/owl#>";
+				update += "PREFIX ex: <http://example.org#>";
+				update+= "INSERT DATA {";
+				//update += "GRAPH <http://smag0.blogspot.fr/GraphTest>{";
+				//update += "smag:RobokIze    rdf:type         smag:Site ."; 
+				//update +="smag:RobokIze   smag:objectif         'un site de vente revente piece detachees , pour robots, et objets connectes' ." ; 
+				//     update += "ex:cat     rdfs:subClassOf  ex:animal .";
+				//     update += "zoo:host   rdfs:range       ex:animal ."; 
+				//     update += "ex:zoo1    zoo:host         ex:cat2 ."; 
+				//     update += "ex:cat3    owl:sameAs       ex:cat2 .";
+				//    update += "ex:cat3    owl:sameAs       ex:cat2 .";
+				
+				var sujet=document.getElementById("sujet").value;
+				var propriete=document.getElementById("propriete").value;
+				var objet=document.getElementById("objet").value;
+				update += "smag:"+sujet+"    smag:"+propriete+"         smag:"+objet+" ."; 
+				
+				// fin requete avec graphe var finRequete = "} }";
+				var finRequete = "}"; // fin requete sans graphe
+				
+				update+=finRequete;
+				console.log(update);
+				
+				
+				
+				
+				return {update: "INSERT"};
+				
+				
+				
+				
+				
+			}*/
+		});
+	</script>
+</dom-module>
