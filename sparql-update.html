@@ -49,68 +49,111 @@
 		on-response="handleResponse"></iron-ajax>
 		
 		<template is="dom-bind">
-			1{{response}}2{{update}}
+		
+			1{{result}}2
 		</template>
 		<!--handle-as="json"
 		last-response="{{response}}"-->
 	</template>
 	
 	<script>
-	var update  =  "PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "; 
-				update +=  "PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>"; 
-				update += "PREFIX smag:   <http://smag0.blogspot.fr/NS#>"; 
-				update += "PREFIX zoo:   <http://example.org/zoo#>";
-				update += "PREFIX owl: <http://www.w3.org/2002/07/owl#>";
-				update += "PREFIX ex: <http://example.org#>";
-				update+= "INSERT DATA {";
-				update += "GRAPH <http://smag0.blogspot.fr/SparqlUpdate>{";
-				//update += "smag:RobokIze    rdf:type         smag:Site ."; 
-				//update +="smag:RobokIze   smag:objectif         'un site de vente revente piece detachees , pour robots, et objets connectes' ." ; 
-				//     update += "ex:cat     rdfs:subClassOf  ex:animal .";
-				//     update += "zoo:host   rdfs:range       ex:animal ."; 
-				//     update += "ex:zoo1    zoo:host         ex:cat2 ."; 
-				//     update += "ex:cat3    owl:sameAs       ex:cat2 .";
-				//    update += "ex:cat3    owl:sameAs       ex:cat2 .";
-				
-				/*var sujet=document.getElementById("sujet").value;
-				var propriete=document.getElementById("propriete").value;
-				var objet=document.getElementById("objet").value;
-				*/
-				var sujet="Sparql-update";
-				var propriete="type";
-				var objet="Interface";
-				update += "smag:"+sujet+"    smag:"+propriete+"         smag:"+objet+" ."; 
-				
-				// fin requete avec graphe 
-				var finRequete = "} }";
-	//var finRequete = "}"; // fin requete sans graphe
-				
-				update+=finRequete;
-				console.log(update);
+		var update  =  "PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "; 
+		update +=  "PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>"; 
+		update += "PREFIX smag:   <http://smag0.blogspot.fr/NS#>"; 
+		update += "PREFIX zoo:   <http://example.org/zoo#>";
+		update += "PREFIX owl: <http://www.w3.org/2002/07/owl#>";
+		update += "PREFIX ex: <http://example.org#>";
+		update+= "INSERT DATA {";
+		update += "GRAPH <http://smag0.blogspot.fr/SparqlUpdate>{";
+		//update += "smag:RobokIze    rdf:type         smag:Site ."; 
+		//update +="smag:RobokIze   smag:objectif         'un site de vente revente piece detachees , pour robots, et objets connectes' ." ; 
+		//     update += "ex:cat     rdfs:subClassOf  ex:animal .";
+		//     update += "zoo:host   rdfs:range       ex:animal ."; 
+		//     update += "ex:zoo1    zoo:host         ex:cat2 ."; 
+		//     update += "ex:cat3    owl:sameAs       ex:cat2 .";
+		//    update += "ex:cat3    owl:sameAs       ex:cat2 .";
+		
+		/*var sujet=document.getElementById("sujet").value;
+			var propriete=document.getElementById("propriete").value;
+			var objet=document.getElementById("objet").value;
+		*/
+		var sujet1="Sparql-statements";
+		var propriete1="type";
+		var objet1="Interface";
+		update += "smag:"+sujet1+"    smag:"+propriete1+"         smag:"+objet1+" ."; 
+		
+		// fin requete avec graphe 
+		var finRequete = "} }";
+		//var finRequete = "}"; // fin requete sans graphe
+		
+		update+=finRequete;
+		console.log(update);
 		Polymer({
 			is: 'sparql-update',
 			
 			properties: {
-				options: {
+				/*sujet: {
 					type: String,
-					value:{update: update}
-					//OKvalue:{update: "INSERT"}
-					
-					
-					//computed: 'computedUpdate()'
-				},
-				result:{
-					type: String,
+					value: 'David',
 					notify: true
-					}
+					},
+				*/
+						/*		ds : {
+					value: 'ds',
+					notify: true
+				},*/
+				/*sujet : {
+					value: 'json',
+					notify: true
+				},
+				propriete: {
+					
+					value: 'type',
+					notify: true					
+				},
+				objet:{
+					value: 'Personne',
+					notify: true					
+				},*/
+								output : {
+					value: 'json',
+					notify: true
+				},
+				options: {
+
+					//OKvalue: {update: update},
+					//	notify : true
+					////OKvalue:{update: "INSERT"}
+					
+					
+					computed: 'computeUpdate(output)'
+				},
+				result: {
+					notify: true
+				}
 				
 			},
+			computeUpdate: function(output){
+				var up=JSON.stringify({update: update});
+				return {update: update};
+				},
 			handleResponse: function(data){
 				
-				this.result=data.detail.response;
+				
+				var html=data.detail.response.getElementsByTagName("html")[0];
+				console.log(html);
+				var body=html.getElementsByTagName("body")[0];
+				console.log(body);
+				var resultat=body.getElementsByTagName("h1")[0];
+				console.log(resultat);
+				this.result=resultat;
 				console.log(this.result);
-				}
-			 /*computedUpdate: function(){
+		/*	for (i = 0; i < this.result.length; i++) {
+ // txt += x[i].childNodes[0].nodeValue + "<br>";
+ console.log(this.result[i].childNodes[0].nodeValue);
+  }*/
+			}
+			/*computedUpdate: function(){
 				var update  =  "PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "; 
 				update +=  "PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>"; 
 				update += "PREFIX smag:   <http://smag0.blogspot.fr/NS#>"; 
