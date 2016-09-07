@@ -3,6 +3,7 @@
 An element providing a starting point for updating sparql endpoint.
 see also [sparql-statements](https://github.com/scenaristeur/sparql-statements) and [BLOG](https://smag0.blogspot.fr/2016/09/sparql-update-un-polymer-element-pour.html)
 
+[ pour voir les changements : http://rdf-smag0.rhcloud.com/ds/query?query=select+*+where+%7B%3Fs+%3Fp+%3Fo%7D&output=xml&stylesheet=%2Fxml-to-html.xsl] (http://rdf-smag0.rhcloud.com/ds/query?query=select+*+where+%7B%3Fs+%3Fp+%3Fo%7D&output=xml&stylesheet=%2Fxml-to-html.xsl)
 
 ## Dependencies
 
