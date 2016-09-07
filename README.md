@@ -1,6 +1,7 @@
 # sparql-update
 
-An element providing a starting point for your own reusable Polymer elements.
+An element providing a starting point for updating sparql endpoint.
+see also [sparql-statements](https://github.com/scenaristeur/sparql-statements) and [BLOG](https://smag0.blogspot.fr/2016/09/sparql-update-un-polymer-element-pour.html)
 
 
 ## Dependencies
