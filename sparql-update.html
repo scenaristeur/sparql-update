@@ -98,7 +98,7 @@
 				* Le sujet du triplet RDF
 				*/
 				sujet : {
-					value: 'David',
+					value: '',
 					notify: true
 				},
 				
@@ -115,7 +115,7 @@
 				*/				
 				objet : {
 
-					value: 'Personne',
+					value: 'Projet',
 					notify: true
 				},
 				
@@ -144,13 +144,19 @@
 				* Construit la requete depuis les variables sujet, propriete, objet
 				*/
 			computeUpdate: function(sujet,propriete,objet){
+			var propSend="smag:"+propriete+" ";
+			if (propriete == "type"){
+				propSend="<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>";
+				}
+			
+			
 				var update  =  "PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n"; 
 				update +=  "PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#> \n"; 
 				update += "PREFIX smag:   <http://smag0.blogspot.fr/NS#> \n"; 
 				update += "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n";
 				update += "INSERT DATA { \n";
 				update += "GRAPH <http://smag0.blogspot.fr/SparqlUpdate>{ \n";
-				update += "smag:"+sujet+"    smag:"+propriete+"         smag:"+objet+" . \n"; 
+				update += "smag:"+sujet+"   "+propSend+"   smag:"+objet+" . \n"; 
 				update += " } \n } \n";
 				console.log(update);
 				this.requete=update;
